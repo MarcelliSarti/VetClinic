@@ -15,7 +15,7 @@ public class Spicie {
     public void setSpecieName(String specieName) {
         this.specieName = specieName;
     }
-
+    
     public int getSpecieId() {
         return specieId;
     }
@@ -24,4 +24,8 @@ public class Spicie {
         return specieName;
     }
     
+    @Override
+    public String toString() {
+        return "Spicie{" + "specieId=" + specieId + ", specieName=" + specieName + '}';
+    }
 }
