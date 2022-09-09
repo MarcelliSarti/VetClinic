@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class DAO {
-    public static final String DBURL = "jdbc:sqlite:vet.db";
+    public static final String DBURL = "jdbc:sqlite:vet_db.db";
     private static Connection con;
     protected static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -107,14 +107,24 @@ public abstract class DAO {
             stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS treatment (\n"
                     + "id INTEGER PRIMARY KEY, \n"
                     + "begin DATE, \n"
-                    + "end DATE); \n"
+                    + "end DATE, \n"
+                    + "id_animal INTEGER); \n"
             );
             executeUpdate(stmt);
             // Consult Table
             stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS consult (\n"
                     + "id INTEGER PRIMARY KEY, \n"
                     + "consult_date DATE, \n"
-                    + "historic VARCHAR); \n"
+                    + "historic VARCHAR, \n"
+                    + "id_treatment INTEGER, \n"
+                    + "id_vet INTEGER); \n"
+            );
+            executeUpdate(stmt);
+            // Exame Table
+            stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS exam (\n"
+                    + "id INTEGER PRIMARY KEY, \n"
+                    + "description VARCHAR, \n"
+                    + "id_consult INTEGER); \n"
             );
             executeUpdate(stmt);
         } catch (SQLException e) {

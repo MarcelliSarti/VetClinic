@@ -73,4 +73,10 @@ public class Vet {
     public void setVetEmail(String vetEmail) {
         this.vetEmail = vetEmail;
     }
+
+    @Override
+    public String toString() {
+        return "Vet{" + "vetId=" + vetId + ", vetName=" + vetName + ", vetCpf=" + vetCpf + ", vetAdress=" + vetAdress + ", vetPhone=" + vetPhone + ", vetCep=" + vetCep + ", vetEmail=" + vetEmail + '}';
+    }
+    
 }

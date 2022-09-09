@@ -72,35 +72,35 @@ public class AnimalDAO extends DAO {
         return (animals.isEmpty()?null:animals.get(0));
     };
     
-    public Animal retrieveByClient(int idClient){
-        List<Animal> animals = this.retrieve("SELECT * FROM animal WHERE id_client = " + idClient);
-        return (animals.isEmpty()?null:animals.get(0));
+    public List retrieveByClient(int idClient){
+        return this.retrieve("SELECT * FROM animal WHERE id_client = " + idClient);
     };
     
     public List retrieveBySimilarName(String name){
         return this.retrieve("SELECT * FROM animal WHERE name LIKE '%" + name + "%'");
     }
     
-    public void update(String id, String name, int anoNasc, String sex, int idSpicie){
+    public void update(int id, String name, int anoNasc, String sex, int clientId, int spicieId){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("UPDATE animal set name=?, ano_nasc=?, sex=?, id_spicie=? where id=?");
+            stmt = DAO.getConnection().prepareStatement("UPDATE animal set name=?, ano_nasc=?, sex=?, id_client=?, id_spicie=? where id=?");
             stmt.setString(1, name);
             stmt.setInt(2, anoNasc);
             stmt.setString(3, sex);            
-            stmt.setInt(4, idSpicie);
-            stmt.setString(5, id);
+            stmt.setInt(4, clientId);
+            stmt.setInt(5, spicieId);
+            stmt.setInt(6, id);
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());
         }
     };
     
-    public void delete(String id){
+    public void delete(int id){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("DELETE FROM animal where id=?");
-            stmt.setString(1, id);
+            stmt.setInt(1, id);
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());
