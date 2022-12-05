@@ -78,17 +78,17 @@ public class ClientDAO extends DAO {
         return this.retrieve("SELECT * FROM client WHERE name LIKE '%" + name + "%'");
     }
     
-    public void update(int id, String name, String cpf, String adress, String phone, String cep, String email){
+    public void update(Client client){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("UPDATE client set name=?, cpf=?, adress=?, phone=?, cep=?, email=? where id=?");
-            stmt.setString(1, name);
-            stmt.setString(2, cpf);
-            stmt.setString(3, adress); 
-            stmt.setString(4, phone);
-            stmt.setString(5, cep);
-            stmt.setString(6, email);
-            stmt.setInt(7, id);
+            stmt.setString(1, client.getClientName());
+            stmt.setString(2, client.getClientCpf());
+            stmt.setString(3, client.getClientAdress()); 
+            stmt.setString(4, client.getClientPhone());
+            stmt.setString(5, client.getClientCep());
+            stmt.setString(6, client.getClientEmail());
+            stmt.setInt(7, client.getClientId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());

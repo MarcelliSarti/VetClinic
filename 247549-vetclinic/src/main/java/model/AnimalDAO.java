@@ -20,15 +20,15 @@ public class AnimalDAO extends DAO {
         return (instance==null?(instance = new AnimalDAO()):instance);
     }
     
-    public Animal create(String name, int anoNasc, String sex, int idClient, int idSpicie){
+    public Animal create(String name, int anoNasc, String sex, Client client, Specie spicie){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("INSERT INTO animal (name, ano_nasc, sex, id_client, id_spicie) VALUES (?, ?, ?, ?, ?)");
             stmt.setString(1, name);
             stmt.setInt(2, anoNasc);
             stmt.setString(3, sex);            
-            stmt.setInt(4, idClient);
-            stmt.setInt(5, idSpicie);
+            stmt.setInt(4, client.getClientId());
+            stmt.setInt(5, spicie.getSpecieId());
             executeUpdate(stmt);
         } catch (SQLException ex){
             Logger.getLogger(AnimalDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -39,7 +39,9 @@ public class AnimalDAO extends DAO {
     public Animal buildingObject(ResultSet rs){
         Animal animal = null;
         try {
-            animal = new Animal(rs.getInt("id"), rs.getString("name"), rs.getInt("ano_nasc"), rs.getString("sex"), rs.getInt("id_client"), rs.getInt("id_spicie"));
+            Client client = ClientDAO.getInstance().retrieveById(rs.getInt("id_client"));
+            Specie spicie = SpecieDAO.getInstance().retrieveById(rs.getInt("id_spicie"));
+            animal = new Animal(rs.getInt("id"), rs.getString("name"), rs.getInt("ano_nasc"), rs.getString("sex"), client, spicie);
         } catch (SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
@@ -76,20 +78,24 @@ public class AnimalDAO extends DAO {
         return this.retrieve("SELECT * FROM animal WHERE id_client = " + idClient);
     };
     
-    public List retrieveBySimilarName(String name){
-        return this.retrieve("SELECT * FROM animal WHERE name LIKE '%" + name + "%'");
+    public List retrieveBySpecie(int idSpecie){
+        return this.retrieve("SELECT * FROM animal WHERE id_spicie = " + idSpecie);
+    };
+    
+    public List retrieveBySimilarName(String name, int clientId){
+        return this.retrieve("SELECT * FROM animal WHERE name LIKE '%" + name + "%' and id_client = " + clientId);
     }
     
-    public void update(int id, String name, int anoNasc, String sex, int clientId, int spicieId){
+    public void update(Animal animal){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("UPDATE animal set name=?, ano_nasc=?, sex=?, id_client=?, id_spicie=? where id=?");
-            stmt.setString(1, name);
-            stmt.setInt(2, anoNasc);
-            stmt.setString(3, sex);            
-            stmt.setInt(4, clientId);
-            stmt.setInt(5, spicieId);
-            stmt.setInt(6, id);
+            stmt.setString(1, animal.getAnimalName());
+            stmt.setInt(2, animal.getAnimalAnoNascimento());
+            stmt.setString(3, animal.getAnimalSex());            
+            stmt.setInt(4, animal.getClient().getClientId());
+            stmt.setInt(5, animal.getSpicie().getSpecieId());
+            stmt.setInt(6, animal.getAnimalId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());

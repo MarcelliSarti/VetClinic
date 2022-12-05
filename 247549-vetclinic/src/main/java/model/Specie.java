@@ -1,13 +1,13 @@
 package model;
 
-public class Spicie {
+public class Specie {
     private int specieId;
     private String specieName;
     
-    public Spicie() {
+    public Specie() {
     }
     
-    public Spicie(int specieId, String specieName) {
+    public Specie(int specieId, String specieName) {
         this.specieId = specieId;
         this.specieName = specieName;
     }
@@ -26,6 +26,6 @@ public class Spicie {
     
     @Override
     public String toString() {
-        return "Spicie{" + "specieId=" + specieId + ", specieName=" + specieName + '}';
+        return "Specie{" + "specieId=" + specieId + ", specieName=" + specieName + '}';
     }
 }

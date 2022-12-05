@@ -78,17 +78,17 @@ public class VetDAO extends DAO {
         return this.retrieve("SELECT * FROM vet WHERE name LIKE '%" + name + "%'");
     }
     
-    public void update(int id, String name, String cpf, String adress, String phone, String cep, String email){
+    public void update(Vet vet){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("UPDATE vet set name=?, cpf=?, adress=?, phone=?, cep=?, email=? where id=?");
-            stmt.setString(1, name);
-            stmt.setString(2, cpf);
-            stmt.setString(3, adress); 
-            stmt.setString(4, phone);
-            stmt.setString(5, cep);
-            stmt.setString(6, email);
-            stmt.setInt(7, id);
+            stmt.setString(1, vet.getVetName());
+            stmt.setString(2, vet.getVetCpf());
+            stmt.setString(3, vet.getVetAdress()); 
+            stmt.setString(4, vet.getVetPhone());
+            stmt.setString(5, vet.getVetCep());
+            stmt.setString(6, vet.getVetEmail());
+            stmt.setInt(7, vet.getVetId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());

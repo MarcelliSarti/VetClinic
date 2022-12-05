@@ -21,12 +21,12 @@ public class ExamDAO extends DAO {
         return (instance==null?(instance = new ExamDAO()):instance);
     }
     
-    public Exam create(String description, int consultId){
+    public Exam create(String description, Consult consult){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("INSERT INTO exam (description, id_consult) VALUES (?, ?)");
             stmt.setString(1, description);
-            stmt.setInt(2, consultId);
+            stmt.setInt(2, consult.getConsultId());
             executeUpdate(stmt);
         } catch (SQLException ex){
             Logger.getLogger(ExamDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -37,7 +37,8 @@ public class ExamDAO extends DAO {
     public Exam buildingObject(ResultSet rs){
         Exam exam = null;
         try {
-            exam = new Exam(rs.getInt("id"), rs.getString("description"), rs.getInt("id_consult"));
+            Consult consult = ConsultDAO.getInstance().retrieveById(rs.getInt("id_consult"));
+            exam = new Exam(rs.getInt("id"), rs.getString("description"), consult);
         } catch (SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
@@ -74,13 +75,17 @@ public class ExamDAO extends DAO {
         return this.retrieve("SELECT * FROM exam WHERE id_consult = " + consultId);
     };
     
-    public void update(int id, String description, int consultId){
+    public List retrieveBySimilarDescription(String description){
+        return this.retrieve("SELECT * FROM exam WHERE description LIKE '%" + description + "%'");
+    }
+    
+    public void update(Exam exam){
         try {
             PreparedStatement stmt;
             stmt = DAO.getConnection().prepareStatement("UPDATE exam set description=?, id_consult=? where id=?");
-            stmt.setString(1, description);
-            stmt.setInt(2, consultId);
-            stmt.setInt(3, id);
+            stmt.setString(1, exam.getExamDescription());
+            stmt.setInt(2, exam.getConsult().getConsultId());
+            stmt.setInt(3, exam.getExamId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());

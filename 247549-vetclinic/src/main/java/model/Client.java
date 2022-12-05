@@ -12,8 +12,6 @@ public class Client {
     private String clientCep;
     private String clientEmail;
     
-    private List<Animal> animals;
-    
     public Client() {
     }
 
@@ -25,10 +23,9 @@ public class Client {
         this.clientPhone = clientPhone;
         this.clientCep = clientCep;
         this.clientEmail = clientEmail;
-        this.animals = new ArrayList<Animal>();
     }
 
-    public int getClient_id() {
+    public int getClientId() {
         return client_id;
     }
 
@@ -79,21 +76,10 @@ public class Client {
     public void setClientEmail(String clientEmail) {
         this.clientEmail = clientEmail;
     }
-    
-    public void addAnimal(Animal animal){
-        animals.add(animal);
-    }
-    
-    public List<Animal> getAnimals(){
-        List<Animal> copia = new ArrayList<Animal> (animals);
-        return copia;
-    }
 
     @Override
     public String toString() {
-        String desc = "Client{" + "client_id=" + client_id + ", clientName=" + clientName + ", clientCpf=" + clientCpf + ", clientAdress=" + clientAdress + ", clientPhone=" + clientPhone + ", clientCep=" + clientCep + ", clientEmail=" + clientEmail + ", animals=" + animals + '}';
-        String strAnimals = animals.toString();
-        return desc + "\n" + strAnimals;
+        return "Client{" + "client_id=" + client_id + ", clientName=" + clientName + ", clientCpf=" + clientCpf + ", clientAdress=" + clientAdress + ", clientPhone=" + clientPhone + ", clientCep=" + clientCep + ", clientEmail=" + clientEmail + '}';
     }
     
 }

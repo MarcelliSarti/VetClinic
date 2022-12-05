@@ -9,76 +9,76 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static model.DAO.getConnection;
 
-public class SpicieDAO extends DAO {
-    private static SpicieDAO instance;
+public class SpecieDAO extends DAO {
+    private static SpecieDAO instance;
     
-    private SpicieDAO(){
+    private SpecieDAO(){
         getConnection();
         createTable();
     }
     
-    public static SpicieDAO getInstance(){
-        return (instance==null?(instance = new SpicieDAO()):instance);
+    public static SpecieDAO getInstance(){
+        return (instance==null?(instance = new SpecieDAO()):instance);
     }
     
-    public Spicie create(String name){
+    public Specie create(String name){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("INSERT INTO spicie (name) VALUES (?)");
+            stmt = DAO.getConnection().prepareStatement("INSERT INTO specie (name) VALUES (?)");
             stmt.setString(1, name);
             executeUpdate(stmt);
         } catch (SQLException ex){
             Logger.getLogger(AnimalDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return this.retrieveById(lastId("spicie", "id"));
+        return this.retrieveById(lastId("specie", "id"));
     };
 
-    public Spicie buildingObject(ResultSet rs){
-        Spicie spicie = null;
+    public Specie buildingObject(ResultSet rs){
+        Specie specie = null;
         try {
-            spicie = new Spicie(rs.getInt("id"), rs.getString("name"));
+            specie = new Specie(rs.getInt("id"), rs.getString("name"));
         } catch (SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
-        return spicie;
+        return specie;
     }
     
     public List retrieve(String query){
-        List<Spicie> spicies = new ArrayList();
+        List<Specie> species = new ArrayList();
         ResultSet rs = getResultSet(query);
         try {
             while (rs.next()){
-                spicies.add(buildingObject(rs));
+                species.add(buildingObject(rs));
             }
         } catch (SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
-        return spicies;
+        return species;
     };
     
     public List retrieveAll(){
-        return this.retrieve("SELECT * FROM spicie");
+        return this.retrieve("SELECT * FROM specie");
     }
     
     public List retrieveLast(){
-        return this.retrieve("SELECT * FROM spicie WHERE id = " + lastId("spicie", "id"));
+        return this.retrieve("SELECT * FROM specie WHERE id = " + lastId("specie", "id"));
     }
     
-    public Spicie retrieveById(int id){
-        List<Spicie> spicie = this.retrieve("SELECT * FROM spicie WHERE id = " + id);
-        return (spicie.isEmpty()?null:spicie.get(0));
+    public Specie retrieveById(int id){
+        List<Specie> specie = this.retrieve("SELECT * FROM specie WHERE id = " + id);
+        return (specie.isEmpty()?null:specie.get(0));
     };
     
     public List retrieveBySimilarName(String name){
-        return this.retrieve("SELECT * FROM spicie WHERE name LIKE '%" + name + "%'");
+        return this.retrieve("SELECT * FROM specie WHERE name LIKE '%" + name + "%'");
     }
     
-    public void update(int id, String name){
+    public void update(Specie specie){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("UPDATE spicie set name=? where id=?");
-            stmt.setString(1, name);
-            stmt.setInt(2, id);
+            stmt = DAO.getConnection().prepareStatement("UPDATE specie set name=? where id=?");
+            stmt.setString(1, specie.getSpecieName());
+            stmt.setInt(2, specie.getSpecieId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());
@@ -88,7 +88,7 @@ public class SpicieDAO extends DAO {
     public void delete(int id){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("DELETE FROM spicie where id=?");
+            stmt = DAO.getConnection().prepareStatement("DELETE FROM specie where id=?");
             stmt.setInt(1, id);
             executeUpdate(stmt);
         } catch (SQLException e){

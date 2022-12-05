@@ -5,19 +5,19 @@ public class Animal {
     private String animalName;
     private int animalAnoNascimento;
     private String animalSex;   
-    private int idClient;    
-    private int idSpicie;
+    private Client client;    
+    private Specie spicie;
     
     public Animal() {
     }
 
-    public Animal(int animalId, String animalName, int animalAnoNascimento, String animalSex, int idClient, int idSpicie) {
+    public Animal(int animalId, String animalName, int animalAnoNascimento, String animalSex, Client client, Specie spicie) {
         this.animalId = animalId;
         this.animalName = animalName;
         this.animalAnoNascimento = animalAnoNascimento;
         this.animalSex = animalSex;
-        this.idClient = idClient;
-        this.idSpicie = idSpicie;
+        this.client = client;
+        this.spicie = spicie;
     }
 
     public int getAnimalId() {
@@ -47,26 +47,27 @@ public class Animal {
     public void setAnimalSex(String animalSex) {
         this.animalSex = animalSex;
     }
-    
-    public int getIdSpicie() {
-        return idSpicie;
+
+    public Client getClient() {
+        return client;
     }
 
-    public void seIidSpicie(int idSpicie) {
-        this.idSpicie = idSpicie;
-    }
-    
-    public int getIdClient() {
-        return idClient;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
-    public void setIdClient(int idClient) {
-        this.idClient = idClient;
+    public Specie getSpicie() {
+        return spicie;
+    }
+
+    public void setSpicie(Specie spicie) {
+        this.spicie = spicie;
     }
 
     @Override
     public String toString() {
-        return "Animal{" + "animalId=" + animalId + ", animalName=" + animalName + ", animalAnoNascimento=" + animalAnoNascimento + ", animalSex=" + animalSex + ", idClient=" + idClient + ", idSpicie=" + idSpicie + '}';
+        return "Animal{" + "animalId=" + animalId + ", animalName=" + animalName + ", animalAnoNascimento=" + animalAnoNascimento + ", animalSex=" + animalSex + ", client=" + client + ", spicie=" + spicie + '}';
     }
+
     
 }

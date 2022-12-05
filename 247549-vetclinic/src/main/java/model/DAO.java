@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public abstract class DAO {
-    public static final String DBURL = "jdbc:sqlite:vet_db.db";
+    public static final String DBURL = "jdbc:sqlite:vet_db6.db";
     private static Connection con;
     protected static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 
@@ -48,7 +48,7 @@ public abstract class DAO {
         int lastId = -1;
         try {
             s = (Statement) con.createStatement();
-            ResultSet rs = s.executeQuery("SELECT MAX(" + primaryKey + ") as id FROM " + tableName);;
+            ResultSet rs = s.executeQuery("SELECT MAX(" + primaryKey + ") as id FROM " + tableName);
             if (rs.next()){
                 lastId = rs.getInt("id");
             }
@@ -76,7 +76,7 @@ public abstract class DAO {
             );
             executeUpdate(stmt);
             // Spicie Table
-            stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS spicie (\n"
+            stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS specie (\n"
                     + "id INTEGER PRIMARY KEY, \n"
                     + "name VARCHAR); \n"
             );
@@ -86,7 +86,7 @@ public abstract class DAO {
                     + "id INTEGER PRIMARY KEY, \n"
                     + "name VARCHAR, \n"
                     + "cpf VARCHAR, \n"
-                    + "ano_nasc INTEGER, \n"
+                    + "ano_nasc VARCHAR, \n"
                     + "sex CHAR, \n"
                     + "id_client INTEGER, \n"
                     + "id_spicie INTEGER); \n"
@@ -106,18 +106,20 @@ public abstract class DAO {
             // Treatement Table
             stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS treatment (\n"
                     + "id INTEGER PRIMARY KEY, \n"
-                    + "begin DATE, \n"
-                    + "end DATE, \n"
+                    + "begin TEXT, \n"
+                    + "end TEXT, \n"
                     + "id_animal INTEGER); \n"
             );
             executeUpdate(stmt);
             // Consult Table
             stmt = DAO.getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS consult (\n"
                     + "id INTEGER PRIMARY KEY, \n"
-                    + "consult_date DATE, \n"
+                    + "consult_date DATE, \n"                    
+                    + "consult_time INTEGER, \n"
                     + "historic VARCHAR, \n"
-                    + "id_treatment INTEGER, \n"
-                    + "id_vet INTEGER); \n"
+                    + "id_animal INTEGER, \n"
+                    + "id_vet INTEGER, \n"
+                    + "is_finish BOOLEAN); \n"
             );
             executeUpdate(stmt);
             // Exame Table

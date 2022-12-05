@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static model.DAO.getConnection;
 import java.sql.Date;
+import java.util.Calendar;
+
 
 public class ConsultDAO extends DAO {
     private static ConsultDAO instance;
@@ -22,14 +24,16 @@ public class ConsultDAO extends DAO {
         return (instance==null?(instance = new ConsultDAO()):instance);
     }
     
-    public Consult create(Date date, String historic, int treatmentId, int vetId){
+    public Consult create(Calendar date, Integer time, String historic, Animal animal, Vet vet, boolean finish){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("INSERT INTO consult (consult_date, historic, id_treatment, id_vet) VALUES (?, ?, ?, ?)");
-            stmt.setDate(1, date);
-            stmt.setString(2, historic);
-            stmt.setInt(3, treatmentId);                             
-            stmt.setInt(4, vetId);
+            stmt = DAO.getConnection().prepareStatement("INSERT INTO consult (consult_date, consult_time, historic, id_animal, id_vet, is_finish) VALUES (?, ?, ?, ?, ?, ?)");
+            stmt.setDate(1, new Date(date.getTimeInMillis()));
+            stmt.setInt(2, time);            
+            stmt.setString(4, historic);
+            stmt.setInt(4, animal.getAnimalId());                             
+            stmt.setInt(5, vet.getVetId());
+            stmt.setBoolean(6, finish);
             executeUpdate(stmt);
         } catch (SQLException ex){
             Logger.getLogger(ConsultDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -38,13 +42,19 @@ public class ConsultDAO extends DAO {
     };
 
     public Consult buildingObject(ResultSet rs){
-        Consult conult = null;
+        Consult consult = null;
         try {
-            conult = new Consult(rs.getInt("id"), rs.getDate("consult_date"), rs.getString("historic"), rs.getInt("id_treatment"), rs.getInt("id_vet"));
+            Animal animal = AnimalDAO.getInstance().retrieveById(rs.getInt("id_animal"));
+            Vet vet = VetDAO.getInstance().retrieveById(rs.getInt("id_vet"));
+            
+            Calendar dt = Calendar.getInstance();
+            dt.setTime(rs.getDate("consult_date"));
+            
+            consult = new Consult(rs.getInt("id"), dt, rs.getInt("consult_time"), rs.getString("historic"), animal, vet, rs.getBoolean("is_finish"));
         } catch (SQLException e) {
             System.err.println("Exception: " + e.getMessage());
         }
-        return conult;
+        return consult;
     }
     
     public List retrieve(String query){
@@ -61,7 +71,7 @@ public class ConsultDAO extends DAO {
     };
     
     public List retrieveAll(){
-        return this.retrieve("SELECT * FROM consult");
+        return this.retrieve("SELECT * FROM consult order by consult_date, consult_time");
     }
     
     public List retrieveLast(){
@@ -73,23 +83,27 @@ public class ConsultDAO extends DAO {
         return (consult.isEmpty()?null:consult.get(0));
     };
     
-    public List retrieveByTreatment(int treatmentId){
-        return this.retrieve("SELECT * FROM consult WHERE id_treatment = " + treatmentId);
+    public List retrieveByAnimal(int animalId){
+        return this.retrieve("SELECT * FROM consult WHERE id_animal = " + animalId + " order by consult_date, consult_time");
     };
     
     public List retrieveByVet(int vetId){
-        return this.retrieve("SELECT * FROM consult WHERE id_vet = " + vetId);
+        return this.retrieve("SELECT * FROM consult WHERE id_vet = " + vetId + " order by consult_date, consult_time");
     };
     
-    public void update(int id, Date consult_date, String historic, int treatmentId, int vetId){
+    public List retrieveByDate(Date consultDate){
+        return this.retrieve("SELECT * FROM consult WHERE consult_date = " + consultDate + " order by consult_time");
+    };
+    
+    public void update(Consult consult){
         try {
             PreparedStatement stmt;
-            stmt = DAO.getConnection().prepareStatement("UPDATE consult set consult_date=?, historic=?, id_treatment=?, id_vet=? where id=?");
-            stmt.setDate(1, consult_date);
-            stmt.setString(2, historic);
-            stmt.setInt(3, treatmentId); 
-            stmt.setInt(4, vetId); 
-            stmt.setInt(5, id);
+            stmt = DAO.getConnection().prepareStatement("UPDATE consult set consult_date=?, consult_time=?, historic=?, is_finish=? where id=?");
+            stmt.setDate(1, new Date(consult.getConsultDate().getTimeInMillis()));            
+            stmt.setInt(2, consult.getConsultTime());
+            stmt.setString(3, consult.getConsultHistoric());
+            stmt.setBoolean(4, consult.isConsultFinish()); 
+            stmt.setInt(5, consult.getConsultId());
             executeUpdate(stmt);
         } catch (SQLException e){
             System.err.println("Exception: " + e.getMessage());

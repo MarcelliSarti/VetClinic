@@ -3,40 +3,40 @@ package model;
 public class Exam {
     private int examId;
     private String exameDescription;
-    private int consultId;
+    private Consult consult;
 
     public Exam() {
     }
 
-    public Exam(int examId, String exameDescription, int consultId) {
+    public Exam(int examId, String exameDescription, Consult consult) {
         this.examId = examId;
         this.exameDescription = exameDescription;
-        this.consultId = consultId;
+        this.consult = consult;
     }
 
     public int getExamId() {
         return examId;
     }
 
-    public String getExameDescription() {
+    public String getExamDescription() {
         return exameDescription;
     }
 
-    public int getConsultId() {
-        return consultId;
-    }
-    
-    public void setExameDescription(String exameDescription) {
+    public void setExamDescription(String exameDescription) {
         this.exameDescription = exameDescription;
     }
 
-    public void setExamId(int examId) {
-        this.examId = examId;
+    public Consult getConsult() {
+        return consult;
+    }
+
+    public void setConsult(Consult consult) {
+        this.consult = consult;
     }
 
     @Override
     public String toString() {
-        return "Exam{" + "examId=" + examId + ", exameDescription=" + exameDescription + ", consultId=" + consultId + '}';
+        return "Exam{" + "examId=" + examId + ", exameDescription=" + exameDescription + ", consult=" + consult + '}';
     }
-    
+
 }
