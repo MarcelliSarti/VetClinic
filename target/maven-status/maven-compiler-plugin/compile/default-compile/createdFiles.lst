@@ -1,0 +1,7 @@
+model\Exam.class
+model\Consult.class
+model\AnimalDAO.class
+model\Client.class
+model\Animal.class
+model\DAO.class
+model\Vet.class
